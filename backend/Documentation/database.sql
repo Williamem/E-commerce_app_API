@@ -42,6 +42,5 @@ CREATE TABLE orders (
 -- Create the orders_items table
 CREATE TABLE orders_items (
     order_id INTEGER REFERENCES orders(id),
-    item_id INTEGER REFERENCES items(id),
-    PRIMARY KEY (order_id, item_id)
+    item_id INTEGER REFERENCES items(id)
 );
