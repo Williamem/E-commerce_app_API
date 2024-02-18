@@ -30,7 +30,7 @@ The frontend design document outlines the architecture, components, and function
 - Admin Interface: Provide administrators with access to manage products, update stock levels, and view order details.
 
 ### Integration with Server/API:
-- Communicate with the backend API endpoints using asynchronous requests (e.g., Axios) to fetch product data, manage user authentication, and handle checkout processes.
+- Communicate with the backend API endpoints using asynchronous requests to fetch product data, manage user authentication, and handle checkout processes.
 - Implement secure authentication mechanisms such as OAuth or token-based authentication to authorize requests.
 
 ### Testing and Quality Assurance:
