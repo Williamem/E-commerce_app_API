@@ -1,0 +1,35 @@
+.navbar {
+    background-color: #167AC6;
+    color: #fff;
+    padding: 10px 0;
+    height: 53px;
+}
+
+.navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.store-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.categories-dropdown select {
+    padding: 7px;
+    font-size: 16px;
+}
+
+.search-bar input {
+    padding: 7px;
+    font-size: 16px;
+}
+
+.user-options a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #fff;
+    padding: 7px;
+    font-size: 16px;
+}
