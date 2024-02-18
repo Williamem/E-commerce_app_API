@@ -25,7 +25,8 @@ CREATE TABLE items (
     price DECIMAL,
     description TEXT,
     stock INTEGER,
-    image_url VARCHAR(200) UNIQUE
+    image_url VARCHAR(200) UNIQUE,
+    category VARCHAR(50)
 );
 
 -- Create the orders table

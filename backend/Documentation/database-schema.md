@@ -23,6 +23,7 @@
 - description (TEXT)
 - stock (INTEGER)
 - image_url (UNIQUE, VARCHAR(200))
+- category (VARCHAR(50))
 
 #### Table: orders
 - id (Primary Key, SERIAL)
