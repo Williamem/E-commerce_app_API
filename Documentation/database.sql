@@ -48,11 +48,11 @@ CREATE TABLE orders_items (
 );
 
 -- Create cart_items table
-CREATE TABLE cart_items {
+CREATE TABLE cart_items (
     user_id INTEGER REFERENCES users(id),
     item_id INTEGER REFERENCES items(id),
     quantity INTEGER
-};
+);
 
 -- Create user_roles table
 CREATE TABLE user_roles (
