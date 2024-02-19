@@ -1,0 +1,567 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: RESTful API for an E-commerce application
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+tags:
+  - name: Users
+    description: Operations related to user management
+  - name: Products
+    description: Operations related to product catalog
+  - name: Cart and Checkout
+    description: Operations related to cart and checkout
+  - name: Admin Functions
+    description: Operations related to admin tasks
+  - name: User Profile
+    description: Operations related to user profile
+  - name: Search and Filter
+    description: Operations related to searching and filtering products
+  - name: Static Content
+    description: Operations related to static content
+  - name: Payment and Orders
+    description: Operations related to payment and orders
+paths:
+  /register:
+    post:
+      tags:
+        - Users
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: User account created successfully
+        '400':
+          description: Invalid request
+  /login:
+    post:
+      tags:
+        - Users
+      summary: User login and authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: User authenticated successfully
+        '401':
+          description: Unauthorized access
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Retrieve user details
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details retrieved successfully
+        '404':
+          description: User not found
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Retrieve a list of products
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Retrieve details of a specific product
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product details retrieved successfully
+        '404':
+          description: Product not found
+    post:
+      tags:
+        - Products
+      summary: Add a new product (admin only)
+      parameters:
+        - name: id
+          in: path
+          description: pathId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProduct'
+      responses:
+        '201':
+          description: Product added successfully
+        '400':
+          description: Invalid request
+    put:
+      tags:
+        - Products
+      summary: Update an existing product (admin only)
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatedProduct'
+      responses:
+        '200':
+          description: Product updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Product not found
+    delete:
+      tags:
+        - Products
+      summary: Remove a product (admin only)
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Product removed successfully
+        '404':
+          description: Product not found
+  /cart:
+    get:
+      tags:
+        - Cart and Checkout
+      summary: Retrieve the user's cart items
+      responses:
+        '200':
+          description: User's cart items retrieved successfully
+  /cart/items:
+    post:
+      tags:
+        - Cart and Checkout           
+      summary: Add an item to the user's cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItem'
+      responses:
+        '201':
+          description: Item added to cart successfully
+        '400':
+          description: Invalid request
+  /cart/items/{id}:
+    put:
+      tags:
+        - Cart and Checkout
+      summary: Update the quantity of an item in the user's cart
+      parameters:
+        - name: id
+          in: path
+          description: Cart item ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatedCartItem'
+      responses:
+        '200':
+          description: Cart item updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Cart item not found
+    delete:
+      tags:
+        - Cart and Checkout
+      summary: Remove an item from the user's cart
+      parameters:
+        - name: id
+          in: path
+          description: Cart item ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cart item removed successfully
+        '404':
+          description: Cart item not found
+  /order:
+    post:
+      tags:
+        - Cart and Checkout
+      summary: Place a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: Order placed successfully
+        '400':
+          description: Invalid request
+  /admin/products:
+    get:
+      tags:
+        - Admin Functions
+      summary: Retrieve a list of products (admin only)
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized access
+  /admin/orders:
+    get:
+      tags:
+        - Admin Functions
+      summary: Retrieve a list of orders (admin only)
+      responses:
+        '200':
+          description: A list of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          description: Unauthorized access
+  /admin/orders/{id}:
+    put:
+      tags:
+        - Admin Functions
+      summary: Update the status of an order (admin only)
+      parameters:
+        - name: id
+          in: path
+          description: Order ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order status updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Order not found
+  /profile:
+    get:
+      tags:
+        - User Profile
+      summary: Retrieve the user's profile details
+      responses:
+        '200':
+          description: User profile details retrieved successfully
+    put:
+      tags:
+        - User Profile
+      summary: Update the user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      responses:
+        '200':
+          description: User profile updated successfully
+        '400':
+          description: Invalid request
+  /products/{category}:
+    get:
+      tags:
+        - Search and Filter
+      summary: Retrieve products based on category
+      parameters:
+        - name: category
+          in: path
+          description: Product category
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Products retrieved successfully
+        '404':
+          description: No products found
+  /products/search:
+    get:
+      tags:
+        - Search and Filter
+      summary: Search for products by name
+      parameters:
+        - name: name
+          in: query
+          description: Product name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Products retrieved successfully
+        '404':
+          description: No products found
+  /about:
+    get:
+      tags:
+        - Static Content
+      summary: Retrieve the about page content
+      responses:
+        '200':
+          description: About page content retrieved successfully
+  /contact:
+    get:
+      tags:
+        - Static Content
+      summary: Retrieve the contact page content
+      responses:
+        '200':
+          description: Contact page content retrieved successfully
+  /payment:
+    post:
+      tags:
+        - Payment and Orders
+      summary: Process a payment for an order
+      responses:
+        '200':
+          description: Payment processed successfully
+        '400':
+          description: Invalid request
+  /orders:
+    get:
+      tags:
+        - Payment and Orders
+      summary: Retrieve a list of the user's orders
+      responses:
+        '200':
+          description: A list of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+  /orders/{id}:
+    get:
+      tags:
+        - Payment and Orders
+      summary: Retrieve details of a specific order
+      parameters:
+        - name: id
+          in: path
+          description: Order ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order details retrieved successfully
+        '404':
+          description: Order not found
+    put:
+      tags:
+        - Payment and Orders
+      summary: Update an existing order
+      parameters:
+        - name: id
+          in: path
+          description: Order ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Order not found
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+    NewProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+    UpdatedProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+    UpdatedCartItem:
+      type: object
+      properties:
+        quantity:
+          type: integer
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the order
+        userId:
+          type: integer
+          description: The ID of the user who placed the order
+        orderDate:
+          type: string
+          format: date
+          description: The date when the order was placed
+        totalPrice:
+          type: number
+          format: float
+          description: The total price of the order
+        shipDate:
+          type: string
+          format: date
+          description: The date when the order was shipped
+        status:
+          type: string
+          description: The status of the order (e.g., pending, shipped, delivered)
+        trackingInformation:
+          type: string
+          description: Information related to the shipment tracking
+      required:
+        - userId
+        - orderDate
+        - totalPrice
+        - status
+    UserProfile:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: The unique identifier of the user
+        firstName:
+          type: string
+          description: The first name of the user
+        lastName:
+          type: string
+          description: The last name of the user
+        email:
+          type: string
+          format: email
+          description: The email address of the user
+        phone:
+          type: string
+          description: The phone number of the user
+        country:
+          type: string
+          description: The country of residence of the user
+        state:
+          type: string
+          description: The state of residence of the user
+        city:
+          type: string
+          description: The city of residence of the user
+        address:
+          type: string
+          description: The address of residence of the user
+      required:
+        - userId
+        - email
+...
