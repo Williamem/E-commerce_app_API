@@ -4,6 +4,7 @@
 - id (Primary Key, INTEGER)
 - email (UNIQUE, VARCHAR(50))
 - password (VARCHAR(60))
+- role_id (Foreign Key)
 
 #### Table: shipping_addresses
 - id (Primary Key, SERIAL)
@@ -37,6 +38,16 @@
 #### Table: orders_items
 - order_id (Foreign Key, INTEGER)
 - item_id (Foreign Key, INTEGER)
+- quantity (INTEGER)
+
+#### Table: cart_items
+- user_id (Foreign Key, INTEGER)
+- item_id (Foreign Key, INTEGER)
+- quantity (INTEGER)
+
+#### Table user_roles
+- id (Primary Key, SERIAL)
+- name (VARCHAR(50))
 
 #### Possible Indexes:
 - Index on (user_id) in the orders table, to improve performance of user-specific queries.

@@ -43,5 +43,25 @@ CREATE TABLE orders (
 -- Create the orders_items table
 CREATE TABLE orders_items (
     order_id INTEGER REFERENCES orders(id),
-    item_id INTEGER REFERENCES items(id)
+    item_id INTEGER REFERENCES items(id),
+    quantity INTEGER
 );
+
+-- Create cart_items table
+CREATE TABLE cart_items {
+    user_id INTEGER REFERENCES users(id),
+    item_id INTEGER REFERENCES items(id),
+    quantity INTEGER
+};
+
+-- Create user_roles table
+CREATE TABLE user_roles (
+  role_id SERIAL PRIMARY KEY,
+  role_name VARCHAR(50) UNIQUE
+);
+
+-- Add rows for user_roles
+INSERT INTO user_roles (role_name) VALUES ('admin'), ('regular_user');
+
+-- Add role_id column to users table
+ALTER TABLE users ADD COLUMN role_id INT REFERENCES user_roles(role_id);
