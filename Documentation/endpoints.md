@@ -1,6 +1,6 @@
 1. User Management:
-   - `POST /register`: Create a new user account
-   - `POST /login`: User login and authentication
+   - `POST /users/register`: Create a new user account
+   - `POST /users/login`: User login and authentication
    - `GET /users/{id}`: Retrieve user details
 
 2. Product Management:
@@ -15,7 +15,7 @@
    - `POST /cart/items`: Add an item to the user's cart
    - `PUT /cart/items/{id}`: Update the quantity of an item in the user's cart
    - `DELETE /cart/items/{id}`: Remove an item from the user's cart
-   - `POST /orders`: Place a new order
+   - `POST /cart/checkout`: Place a new order
 
 4. Admin Functions:
    - `GET /admin/products`: Retrieve a list of products (admin only)

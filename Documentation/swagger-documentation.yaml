@@ -23,7 +23,7 @@ tags:
   - name: Payment and Orders
     description: Operations related to payment and orders
 paths:
-  /register:
+  /users/register:
     post:
       tags:
         - Users
@@ -39,7 +39,7 @@ paths:
           description: User account created successfully
         '400':
           description: Invalid request
-  /login:
+  /users/login:
     post:
       tags:
         - Users
@@ -230,7 +230,7 @@ paths:
           description: Cart item removed successfully
         '404':
           description: Cart item not found
-  /order:
+  /cart/checkout:
     post:
       tags:
         - Cart and Checkout
