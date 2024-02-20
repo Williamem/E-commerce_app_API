@@ -4,6 +4,8 @@ const { connect } = require('./config/database');
 
 const port = process.env.PORT || 4001;
 
+/* npm run dev to run nodemon */
+
 (async () => {
   try {
     // Connect to database
