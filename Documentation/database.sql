@@ -65,3 +65,22 @@ INSERT INTO user_roles (role_name) VALUES ('admin'), ('regular_user');
 
 -- Add role_id column to users table
 ALTER TABLE users ADD COLUMN role_id INT REFERENCES user_roles(role_id);
+
+-- create role for app and grant required priviledges
+CREATE ROLE ecommerce_app WITH LOGIN PASSWORD 'password';
+
+GRANT ALL PRIVILEGES ON TABLE users TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE shipping_addresses TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE items TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE orders TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE orders_items TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE cart_items TO ecommerce_app;
+GRANT ALL PRIVILEGES ON TABLE user_roles TO ecommerce_app;
+
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ecommerce_app;
+
+-- create admin user
+INSERT INTO users (email, password, role_id) 
+VALUES ('admin@example.com', 'password', 
+    (SELECT role_id FROM user_roles WHERE role_name = 'admin'));
+
