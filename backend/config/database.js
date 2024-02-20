@@ -1,13 +1,5 @@
 const { Pool } = require('pg');
 
-/* const pool = new Pool({
-    user: 'ecommerce_app',
-    host: 'localhost',
-    database: 'e-commerce-api',
-    password: 'password',
-    port: 5432,
-  }); */
-
   const pool = new Pool({
     user: process.env.DB_USER || 'ecommerce_app',
     host: process.env.DB_HOST || 'localhost',

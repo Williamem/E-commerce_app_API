@@ -20,10 +20,10 @@ app.use(bodyParser.json());
 
 // Routes
 // app.use('/users', userRoutes);
-// app.use('/admins', adminRoutes);
+// app.use('/admin', adminRoutes);
 // app.use('/products', productRoutes);
 // app.use('/cart', cartRoutes);
-// ... use other routes
+// ... other routes
 
 app.get('/', (req, res) => {
     res.send("Welcome to our E-commerce API!");
