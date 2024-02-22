@@ -1,37 +1,30 @@
-const { Pool } = require('pg');
+const Sequelize = require('sequelize');
 
+// Setting up a new Sequelize instance
+const db = new Sequelize(
+    process.env.DB_NAME || 'e-commerce-api',
+    process.env.DB_USER || 'ecommerce_app',
+    process.env.DB_PASSWORD || 'password',
+    {
+        host: process.env.DB_HOST || 'localhost',
+        dialect: 'postgres',
+        logging: false
+    }
+);
 
-  const pool = new Pool({
-    user: process.env.DB_USER || 'ecommerce_app',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'e-commerce-api',
-    password: process.env.DB_PASSWORD || 'password',
-    port: process.env.DB_PORT || 5432,
-});
-
-// Function to connect to database
+// Function to connect to the database
 const connect = async () => {
   try {
-    await pool.connect();
+    await db.authenticate();    // Sequelize's equivalent of "pool.connect()" in pg
     console.log('Connected to database!');
-  } catch (err) {
+  }
+  catch (err) {
     throw err;
   }
 };
 
-// Function to execute query
-const query = async (text, params) => {
-  try {
-    const res = await pool.query(text, params);
-    return res;
-  } catch (err) {
-    throw err;
-  }
-};
-
-
-// Export the 'connect' and 'query' function to be used in other parts of the application
+// Exporting 'connect' and db (Sequelize instance) to be used in other parts of the application
 module.exports = {
-  connect,
-  query
+    db,
+    connect
 };
