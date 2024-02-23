@@ -84,3 +84,10 @@ INSERT INTO users (email, password, role_id)
 VALUES ('admin@example.com', 'password', 
     (SELECT role_id FROM user_roles WHERE role_name = 'admin'));
 
+-- add tables for use by sequelize
+ALTER TABLE users
+ADD COLUMN createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
+ALTER TABLE users
+ADD COLUMN updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
