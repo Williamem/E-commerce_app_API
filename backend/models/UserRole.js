@@ -17,4 +17,4 @@ const UserRole = db.define('user_roles', {
     timestamps: false
 });
 
-module.exports = {UserRole};
+module.exports = UserRole;

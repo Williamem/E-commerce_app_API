@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { db } = require('../config/database');
-const {UserRole }= require('./UserRole');
+const UserRole= require('./UserRole');
 
 const User = db.define('users', {
   id: {
@@ -39,4 +39,4 @@ const User = db.define('users', {
 
 User.belongsTo(UserRole, {foreignKey: 'role_id'});
 
-module.exports = {User};
+module.exports = User;
