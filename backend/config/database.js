@@ -1,13 +1,14 @@
 const Sequelize = require('sequelize');
+require('dotenv').config();
 
 // Setting up a new Sequelize instance
 const db = new Sequelize(
-    process.env.DB_NAME || 'e-commerce-api',
-    process.env.DB_USER || 'ecommerce_app',
-    process.env.DB_PASSWORD || 'password',
+    process.env.DB_NAME/*  || 'e-commerce-api' */,
+    process.env.DB_USER/*  || 'ecommerce_app' */,
+    process.env.DB_PASSWORD/*  || 'password' */,
     {
-        host: process.env.DB_HOST || 'localhost',
-        dialect: 'postgres',
+        host: process.env.DB_HOST/*  || 'localhost' */,
+        dialect: process.env.DB_DIALECT/* || 'postgres' */,
         logging: false
     }
 );
