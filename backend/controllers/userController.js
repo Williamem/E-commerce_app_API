@@ -35,3 +35,24 @@ exports.createUser = async (req, res) => {
   }
 }
 
+exports.login = async (req, res) => {
+  res.status(200).send({ message: 'Log in successful' });
+}
+
+exports.logout = async (req, res) => {
+  req.logout(() => {
+    res.send({ message: 'logged out' });
+  })
+}
+
+/* app.get('/logout', (req, res) => {
+  req.logout(() => {
+      res.send({ message: 'logged out' });
+  });
+}); */
+
+/* app.post('/login', passport.authenticate('local'), (req, res) => {
+  console.dir()
+  res.status(200).send({ message: 'Log in successful' });
+}); */
+
