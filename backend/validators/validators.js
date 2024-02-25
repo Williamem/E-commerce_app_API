@@ -28,7 +28,12 @@ const productValidator = Joi.object({
         'string.empty': 'Name is reqired',
         'string.min': 'name requires minimum length of 2',
         'any.requires': 'Name is required'
-    })
+    }),
+    price: Joi.number(),
+    description: Joi.string(),
+    stock: Joi.number(),
+    image_url: Joi.string(),
+    category: Joi.string()
 })
 
 module.exports = {

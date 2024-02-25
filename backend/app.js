@@ -1,6 +1,4 @@
 const express = require('express');
-/* const passport = require('passport');
-require('./config/passport')(passport); */
 
 require('dotenv').config();
 
@@ -28,10 +26,10 @@ setupMiddleware(app);
 // Routes
 app.use('/users', userRoutes);
 
-app.use(isAuthenticated)
+//app.use(isAuthenticated)
 
 app.use('/admin', adminRoutes);
-// app.use('/products', productRoutes);
+app.use('/products', productRoutes);
 // app.use('/cart', cartRoutes);
 // ... other routes
 
