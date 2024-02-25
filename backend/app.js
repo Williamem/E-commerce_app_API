@@ -30,7 +30,7 @@ app.use('/users', userRoutes);
 
 app.use(isAuthenticated)
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use('/products', productRoutes);
 // app.use('/cart', cartRoutes);
 // ... other routes
