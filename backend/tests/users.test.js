@@ -10,11 +10,6 @@ chai.use(chaiHttp);
 let createdUserIds = [];
 describe("/users routes", () => {
     describe("POST /users/register", () => {
-        /* before(function() {
-            server.listen(3000, function () {
-                console.log('Server is listening before tests run');
-            });
-        }); */
         
         afterEach(async () => {
             // Teardown: delete the created user
@@ -23,7 +18,6 @@ describe("/users routes", () => {
                     for (let i = 0; i < createdUserIds.length; i++) {
                         const id = createdUserIds[i];
                         const user = await User.findByPk(id); // find the user by PK
-                        //console.dir(user);
                         if (user) {
                             await user.destroy(); // delete the user
                         }
@@ -31,7 +25,7 @@ describe("/users routes", () => {
                     createdUserIds = []; // empty the array
                 }
             } catch (err) {
-                console.log(err); // log any error
+                console.log(err);
             }
         });
         
@@ -39,17 +33,12 @@ describe("/users routes", () => {
             const user = {
                 email: "testemai123@test.com",
                 password: "testPassword",
-                // include all other required fields
             };
-            //console.dir(user, {depht: null});
             
             chai.request(server)
             .post("/users/register")
             .send(user)
             .end((err, response) => {
-                
-                //console.log("RESPONSE BODY: ", response.body);
-                //console.log("RESPONSE STATUS: ", response.status)
                 
                 response.should.have.status(201);
                 response.body.should.be.a("object");
@@ -124,12 +113,6 @@ describe("/users routes", () => {
                 done();
             });
         });
-        
-        /*   after(function() {
-            server.close();
-            console.log('Server has stopped listening after tests');
-        }); */
-        
     });
 
     describe('POST users/login', () => {
