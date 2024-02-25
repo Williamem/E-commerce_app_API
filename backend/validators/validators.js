@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('joi');
 
 const userValidator = Joi.object({
     email: Joi.string()
@@ -20,4 +20,18 @@ const userValidator = Joi.object({
         })
 });
 
-module.exports = userValidator;
+const productValidator = Joi.object({
+    name: Joi.string()
+    .min(1)
+    .required()
+    .messages({
+        'string.empty': 'Name is reqired',
+        'string.min': 'name requires minimum length of 2',
+        'any.requires': 'Name is required'
+    })
+})
+
+module.exports = {
+    userValidator,
+    productValidator
+};
