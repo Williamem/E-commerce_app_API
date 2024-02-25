@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const UserRole = require('../models/UserRole');
-const userValidator = require('../validators/userValidator')
+const { userValidator } = require('../validators/validators')
 
 exports.createUser = async (req, res) => {
   const validationResult = userValidator.validate(req.body); // Validate input using Joi
