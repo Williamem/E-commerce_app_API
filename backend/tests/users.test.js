@@ -143,11 +143,48 @@ describe("/users routes", () => {
             .send(user)
             .end((err, response) => {
                 response.should.have.status(200);
-                response.text.should.include('logged in');
+                response.text.should.include('Log in successful');
+                done();
+            })
+        });
+        it('fails to login with incorrect password', (done) => {
+            const user = {
+                email: 'testuser@example.com',
+                password: 'wrongPassword'
+            };
+            chai.request(server)
+            .post('/users/login')
+            .send(user)
+            .end((err, response) => {
+                response.should.have.status(401);
+                response.text.should.include('Unauthorized');
+                done();
+            })
+        });
+        it('fails to login nonexistant user', (done) => {
+            const user = {
+                email: 'notAUser@example.com',
+                password: 'wrongPassword'
+            };
+            chai.request(server)
+            .post('/users/login')
+            .send(user)
+            .end((err, response) => {
+                response.should.have.status(401);
+                response.text.should.include('Unauthorized');
+                done();
+            })
+        });
+        it('logs out user', (done) => {
+            chai.request(server)
+            .get('/users/logout')
+            .end((err, response) => {
+                response.should.have.status(200);
+                response.text.should.include('logged out');
                 done();
             })
         })
-    })
+    });
 })
     
     
