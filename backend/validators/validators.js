@@ -34,9 +34,34 @@ const productValidator = Joi.object({
     stock: Joi.number(),
     image_url: Joi.string(),
     category: Joi.string()
-})
+});
+
+const addressValidator = Joi.object({
+    first_name: Joi.string()
+    .required()
+    .messages({
+        'string.empty': 'First name is required'
+    }),
+    last_name: Joi.string()
+    .required()
+    .messages({
+        'string.empty': 'Last name is required'
+    }),
+    phone: Joi.string()
+    .max(20)
+    .messages({
+        'string.max': 'That is too long to be a phone number'
+    }),
+    country: Joi.string(),
+    state: Joi.string(),
+    city: Joi.string(),
+    address: Joi.string()
+});
+
+
 
 module.exports = {
     userValidator,
-    productValidator
+    productValidator,
+    addressValidator
 };
