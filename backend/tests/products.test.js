@@ -108,7 +108,7 @@ describe('/products routes', () => {
                     return console.log('the product to update doesn\'t exist');
                 }
         
-                agent //chai.request(server)
+                agent
                     .put(`/products/${productIdToUpdate}`)
                     .send(updatedProductData)
                     .end((err, response) => {
@@ -129,7 +129,6 @@ describe('/products routes', () => {
                 const updatedProductData = {
                     name: 'Updated test product',
                     price: 120
-                    // ... other updated fields
                 };
         
                 const invalidProductId = 2;
@@ -145,6 +144,7 @@ describe('/products routes', () => {
         });
 
         describe('DELETE /products/:id as admin', () => {
+            //create a product to be deleted
             let productToDeleteId;
 
             before((done) => {
