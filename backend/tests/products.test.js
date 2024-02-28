@@ -108,7 +108,7 @@ describe('/products routes', () => {
                     return console.log('the product to update doesn\'t exist');
                 }
         
-                chai.request(server)
+                agent //chai.request(server)
                     .put(`/products/${productIdToUpdate}`)
                     .send(updatedProductData)
                     .end((err, response) => {
@@ -134,7 +134,7 @@ describe('/products routes', () => {
         
                 const invalidProductId = 2;
         
-                chai.request(server)
+                agent
                     .put(`/products/${invalidProductId}`)
                     .send(updatedProductData)
                     .end((err, response) => {
@@ -142,6 +142,56 @@ describe('/products routes', () => {
                         done();
                     });
             });
+        });
+
+        describe('DELETE /products/:id as admin', () => {
+            let productToDeleteId;
+
+            before((done) => {
+                // Create a product to be deleted
+                const productData = {
+                    name: 'Test product to be deleted'
+                };
+        
+                agent
+                    .post('/products/add')
+                    .send(productData)
+                    .end((err, response) => {
+                        productToDeleteId = response.body.id;
+                        done(err);
+                    });
+            });
+        
+            it('deletes an existing product', (done) => {
+                agent
+                    .delete(`/products/${productToDeleteId}`)
+                    .end((err, response) => {
+                        response.should.have.status(200);
+                        // Add more assertions as needed
+        
+                        done();
+                    });
+            });
+        
+            it('returns a 404 error for an invalid product ID', (done) => {
+                const invalidProductId = 2;
+        
+                agent
+                    .delete(`/products/${invalidProductId}`)
+                    .end((err, response) => {
+                        response.should.have.status(404);
+                        done();
+                    });
+            });
+        
+/*             after((done) => {
+                // Clean up: delete the product created for the test
+                agent
+                    .delete(`/products/${productToDeleteId}`)
+                    .end((err, response) => {
+                        done();
+                    });
+            }); */
         });
             
         // teardown, log out admin
@@ -156,6 +206,7 @@ describe('/products routes', () => {
                 });
         });        
     });
+
     describe('/products routes as regular user', () => {
         // Setup, login regular user
         let agent;
@@ -228,6 +279,22 @@ describe('/products routes', () => {
                     }
                     done();
                 });
+        });
+    });
+
+    describe('/products routes while not signed in', () => {
+        describe('GET /products/:id', () => {
+            it('returns an object containing product information', (done) => {
+                chai.request(server)
+                .get('/products/1')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("id");
+                    response.body.should.have.property("name");
+                    done();
+                });
+            });
         });
     });
 
