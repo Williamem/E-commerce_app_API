@@ -48,7 +48,7 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
     const id = parseInt(req.params.id); // Access id from req.params
-    console.log('Product ID to delete:', id);
+    //console.log('Product ID to delete:', id);
     try {
         const productToDelete = await Product.findByPk(id);
         if (!productToDelete) {
@@ -66,8 +66,8 @@ exports.getProduct = async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const product = await Product.findByPk(id);
-        console.log('product:')
-        console.dir(product)
+/*         console.log('product:')
+        console.dir(product) */
         if (!product) {
             return res.status(404).json({message: 'Product not found'});
         }

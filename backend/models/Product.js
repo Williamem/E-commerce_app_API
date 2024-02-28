@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const { db } = require('../config/database');
-const UserRole= require('./UserRole');
 
 const Product = db.define('items', {
     id: {
@@ -28,16 +27,6 @@ const Product = db.define('items', {
     category: {
         type: Sequelize.STRING
     },
-/*     createdAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      field: 'createdat'
-    },
-    updatedAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      field: 'updatedat'
-    } */
 }, {
     timestamps: false
 });
