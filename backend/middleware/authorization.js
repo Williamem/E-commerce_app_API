@@ -6,6 +6,18 @@ const isAdmin = (req, res, next) => {
     }
 };
 
+// authorization.js
+const isCurrentUser = (idToAccess, req, res, next) => {
+    console.log('idToAccess: ', idToAccess);
+    console.log('req.user.datavalues.id ', req.user.dataValues.id)
+    if (req.user && parseInt(req.user.dataValues.id) === parseInt(idToAccess)) {
+        next(); // User authorized, continue to the next middleware or route handler
+    } else {
+        res.status(403).json({ error: 'Unauthorized' }); // User is not authorized
+    }
+}
+
 module.exports = {
     isAdmin,
+    isCurrentUser,
 }
