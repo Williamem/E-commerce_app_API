@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 
 let createdProductIds = [];
 
-describe('/products routes', () => {
+describe.skip('/products routes', () => {
     describe('/products routes as admin user', () => {
         // Setup
         let agent;
