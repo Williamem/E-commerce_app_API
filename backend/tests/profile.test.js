@@ -23,8 +23,8 @@ const findId = (user) => {
 }
 
 
-describe('/users/:userId/address', () => {
-    describe('/users/:userId/address as admin', () => {
+describe('/profile/:userId/address', () => {
+    describe('/profile/:userId/address as admin', () => {
         //setup login admin
         let agent;
         before((done) => {
@@ -70,7 +70,7 @@ describe('/users/:userId/address', () => {
                 });
         });   
     });
-    describe('/users/:userId/address as regular user', () => {
+    describe('/profile/:userId/address as regular user', () => {
         //setup login regular user
         let agent;
         before((done) => {
@@ -83,7 +83,7 @@ describe('/users/:userId/address', () => {
                 });
         });
         //tests
-        describe('POST /users/:userId/address', () => {
+        describe('POST /profile/:userId/address', () => {
             const validAddress = {
                 first_name: 'First',
                 last_name: 'Last',
@@ -96,7 +96,7 @@ describe('/users/:userId/address', () => {
             it('adds a new address for a user who is signed in', (done) => {
 
                 agent
-                    .post(`/users/${regularUserId}/address`)
+                    .post(`/profile/${regularUserId}/address`)
                     .send(validAddress)
                     .end((err, response) => {
                         console.log('regularUserId ', regularUserId)
@@ -117,7 +117,7 @@ describe('/users/:userId/address', () => {
             });
             it('fails to add an address to a user thats not the user logged in', (done) => {
                 agent
-                    .post(`/users/${anotherExistingUserId}/address`)
+                    .post(`/profile/${anotherExistingUserId}/address`)
                     .send(validAddress)
                     .end((err, response) => {
                         response.should.have.status(403);
@@ -157,7 +157,7 @@ describe('/users/:userId/address', () => {
         });  
 
     });
-    describe('/users/:userId/address as guest', () => {
+    describe('/profile/:userId/address as guest', () => {
         //delete any created addresses
         after(async () => {
             try {
