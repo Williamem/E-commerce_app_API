@@ -296,6 +296,42 @@ describe('/products routes', () => {
                 });
             });
         });
+        describe('GET /products', () => {
+            it('returns an object of all products', (done) => {
+                chai.request(server)
+                .get('/products')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a("object");
+                    done();
+                });
+            });
+        });
+
+        
+        describe('GET /products/categories', () => {
+            it('returns an array of product categories', (done) => {
+                chai.request(server)
+                .get('/products/categories')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a("array");
+                    done();
+                });
+            });
+        });
+
+        describe('GET /products/categories/:category', () => {
+            it('returns an array of products in the specified category', (done) => {
+                chai.request(server)
+                .get('/products/categories/testing_products')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a("object");
+                    done();
+                });
+            });
+        })
     });
 
     // Teardown, delete products created in test
