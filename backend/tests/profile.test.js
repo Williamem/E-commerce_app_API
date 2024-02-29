@@ -16,6 +16,8 @@ const regularUserId = regularUser.id;
 const anotherExistingUserId = 128;
 const nonexistantUserId = 9999;
 
+//
+
 const findId = (user) => {
     return (req, res, next) => {
         return req.user.dataValues.id;
@@ -23,8 +25,9 @@ const findId = (user) => {
 }
 
 
-describe('/profile/:userId/address', () => {
-    describe('/profile/:userId/address as admin', () => {
+describe('/profile/:userId/', () => {
+
+    describe('/profile/:userId/ as admin', () => {
         //setup login admin
         let agent;
         before((done) => {
@@ -33,16 +36,120 @@ describe('/profile/:userId/address', () => {
                 .post('/users/login')
                 .send(admin)
                 .end((err, response) => {
-                    adminId = response.body.id;
                     done(err);
                 });
         });
-        //tests
+        //tests        
+        //admin can view any user's profile
+        describe('POST /profile/:userId/address as admin', () => {
+            const validAddress = {
+                first_name: 'First',
+                last_name: 'Last',
+                phone: '123456789',
+                country: 'Country',
+                state: 'State',
+                city: 'City',
+                address: 'Address'
+            };
+            it('adds a new address for any user when signed in as admin', (done) => {
+                agent
+                    .post(`/profile/${regularUserId}/address`)
+                    .send(validAddress)
+                    .end((err, response) => {
+                        console.log('regularUserId ', regularUserId)
+                        response.should.have.status(201);
+                        response.should.be.a('object');
+                        response.body.should.have.property("id");
+                        response.body.should.have.property("user_id");
+                        response.body.should.have.property("first_name");
+                        response.body.should.have.property("last_name");
+                        response.body.should.have.property("phone");
+                        response.body.should.have.property("country");
+                        response.body.should.have.property("state");
+                        response.body.should.have.property("city");
+                        response.body.should.have.property("address");
+                        createdAddressIds.push(response.body.id);
+                        done();
+                    });
+            });
+            it('fails to add an address to a user that does not exist', (done) => {
+                agent
+                    .post(`/profile/${nonexistantUserId}/address`)
+                    .send(validAddress)
+                    .end((err, response) => {
+                        response.should.have.status(404);
+                        response.text.should.include('User not found');
+                        done();
+                    });
+            });
+        });
+
+
+        describe('GET /profile/:userId as admin', () => {
+            it('gets the addresses and email for any user when signed in as admin', (done) => {
+                agent
+                    .get(`/profile/${regularUserId}`)
+                    .end((err, response) => {
+                        response.should.have.status(200);
+                        response.should.be.a('object');
+                        response.body.should.have.property("addresses");
+                        response.body.addresses.should.be.a('array');
+                        response.body.addresses[0].should.have.property("user_id");
+                        response.body.addresses[0].should.have.property("first_name");
+                        response.body.addresses[0].should.have.property("last_name");
+                        response.body.addresses[0].should.have.property("phone");
+                        response.body.addresses[0].should.have.property("country");
+                        response.body.addresses[0].should.have.property("state");
+                        response.body.addresses[0].should.have.property("city");
+                        response.body.addresses[0].should.have.property("address");
+                        done();
+                    });
+            });
+            it('gets User not found for a user that does not exist', (done) => {
+                agent
+                    .get(`/profile/${nonexistantUserId}`)
+                    .end((err, response) => {
+                        response.should.have.status(404);
+                        response.text.should.include('User not found');
+                        done();
+                    });
+            });
+        });
+        describe('PUT /profile/:userId/address/:addressId as admin', () => {
+            it('updates an address for any user when signed in as admin', (done) => {
+                const updatedAddress = {
+                    first_name: 'Updated First',
+                    last_name: 'Updated Last',
+                    phone: '987654321',
+                    country: 'Updated Country',
+                    state: 'Updated State',
+                    city: 'Updated City',
+                    address: 'Updated Address'
+                };
+                agent
+                    .put(`/profile/${regularUserId}/address/${createdAddressIds[0]}`)
+                    .send(updatedAddress)
+                    .end((err, response) => {
+                        response.should.have.status(200);
+                        response.should.be.a('object');
+                        response.body.should.have.property("id");
+                        response.body.should.have.property("user_id");
+                        response.body.should.have.property("first_name");
+                        response.body.should.have.property("last_name");
+                        response.body.should.have.property("phone");
+                        response.body.should.have.property("country");
+                        response.body.should.have.property("state");
+                        response.body.should.have.property("city");
+                        response.body.should.have.property("address");
+                        done();
+                    });
+            });
+        });
 
         // teardown
         //delete any created addresses
         after(async () => {
-            // Teardown: delete the created user
+            // Teardown: delete the created address
             try {
                 if (createdAddressIds.length > 0) {
                     for (let i = 0; i < createdAddressIds.length; i++) {
@@ -58,6 +165,7 @@ describe('/profile/:userId/address', () => {
                 console.log(err);
             }
         });
+
         //log out
         after((done) => {
             chai.request(server)
@@ -70,7 +178,7 @@ describe('/profile/:userId/address', () => {
                 });
         });   
     });
-    describe('/profile/:userId/address as regular user', () => {
+    describe('/profile/:userId/ as regular user', () => {
         //setup login regular user
         let agent;
         before((done) => {
@@ -124,16 +232,6 @@ describe('/profile/:userId/address', () => {
                         done();
                     });
             });
-            it('fails to add an address to a user that does not exist', (done) => {
-                agent
-                    .post(`/profile/${nonexistantUserId}/address`)
-                    .send(validAddress)
-                    .end((err, response) => {
-                        response.should.have.status(404);
-                        response.text.should.include('User not found');
-                        done();
-                    });
-            });
         });
         describe('GET /profile/:userId', () => {
             it('gets the addresses and email for the user who is signed in', (done) => {
@@ -142,20 +240,47 @@ describe('/profile/:userId/address', () => {
                     .end((err, response) => {
                         response.should.have.status(200);
                         response.should.be.a('object');
-                        response.body.should.have.property("email");
-                        response.body.should.have.property("id");
-                        response.body.should.have.property("first_name");
-                        response.body.should.have.property("last_name");
-                        response.body.should.have.property("phone");
+                        //the following properties are on objects in an array, rewrite the assertions for me.
+                        response.body.should.have.property("addresses");
+                        response.body.addresses.should.be.a('array');
+                        response.body.addresses[0].should.have.property("user_id");
+                        response.body.addresses[0].should.have.property("first_name");
+                        response.body.addresses[0].should.have.property("last_name");
+                        response.body.addresses[0].should.have.property("phone");
+                        response.body.addresses[0].should.have.property("country");
+                        response.body.addresses[0].should.have.property("state");
+                        response.body.addresses[0].should.have.property("city");
+                        response.body.addresses[0].should.have.property("address");
                         done();
                     });
             });
-            it('fails to get the addresses for a user that does not exist', (done) => {
+        });
+        describe('PUT /profile/:userId/address/:addressId', () => {
+            it('updates an address for a user who is signed in', (done) => {
+                const updatedAddress = {
+                    first_name: 'Updated First',
+                    last_name: 'Updated Last',
+                    phone: '987654321',
+                    country: 'Updated Country',
+                    state: 'Updated State',
+                    city: 'Updated City',
+                    address: 'Updated Address'
+                };
                 agent
-                    .get(`/profile/${nonexistantUserId}`)
+                    .put(`/profile/${regularUserId}/address/${createdAddressIds[0]}`)
+                    .send(updatedAddress)
                     .end((err, response) => {
-                        response.should.have.status(404);
-                        response.text.should.include('User not found');
+                        response.should.have.status(200);
+                        response.should.be.a('object');
+                        response.body.should.have.property("id");
+                        response.body.should.have.property("user_id");
+                        response.body.should.have.property("first_name");
+                        response.body.should.have.property("last_name");
+                        response.body.should.have.property("phone");
+                        response.body.should.have.property("country");
+                        response.body.should.have.property("state");
+                        response.body.should.have.property("city");
+                        response.body.should.have.property("address");
                         done();
                     });
             });
@@ -191,7 +316,7 @@ describe('/profile/:userId/address', () => {
         });  
 
     });
-    describe('/profile/:userId/address as guest', () => {
+    describe('/profile/:userId/ as guest', () => {
         //delete any created addresses
         after(async () => {
             try {
