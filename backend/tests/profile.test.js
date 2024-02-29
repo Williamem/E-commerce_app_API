@@ -94,7 +94,6 @@ describe('/profile/:userId/address', () => {
                 address: 'Address'
             };
             it('adds a new address for a user who is signed in', (done) => {
-
                 agent
                     .post(`/profile/${regularUserId}/address`)
                     .send(validAddress)
@@ -122,6 +121,41 @@ describe('/profile/:userId/address', () => {
                     .end((err, response) => {
                         response.should.have.status(403);
                         response.text.should.include('Unauthorized');
+                        done();
+                    });
+            });
+            it('fails to add an address to a user that does not exist', (done) => {
+                agent
+                    .post(`/profile/${nonexistantUserId}/address`)
+                    .send(validAddress)
+                    .end((err, response) => {
+                        response.should.have.status(404);
+                        response.text.should.include('User not found');
+                        done();
+                    });
+            });
+        });
+        describe('GET /profile/:userId', () => {
+            it('gets the addresses and email for the user who is signed in', (done) => {
+                agent
+                    .get(`/profile/${regularUserId}`)
+                    .end((err, response) => {
+                        response.should.have.status(200);
+                        response.should.be.a('object');
+                        response.body.should.have.property("email");
+                        response.body.should.have.property("id");
+                        response.body.should.have.property("first_name");
+                        response.body.should.have.property("last_name");
+                        response.body.should.have.property("phone");
+                        done();
+                    });
+            });
+            it('fails to get the addresses for a user that does not exist', (done) => {
+                agent
+                    .get(`/profile/${nonexistantUserId}`)
+                    .end((err, response) => {
+                        response.should.have.status(404);
+                        response.text.should.include('User not found');
                         done();
                     });
             });
