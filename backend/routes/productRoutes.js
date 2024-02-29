@@ -9,6 +9,9 @@ router.post('/add', isAdmin, productController.createProduct);
 router.put('/:id', isAdmin, productController.updateProduct);
 router.delete('/:id', isAdmin, productController.deleteProduct);
 router.get('/:id', productController.getProduct);
+router.get('/', productController.getProducts);
+
+//search and filter routes
 
 /* router.get('/', (req, res) => {
     res.status(200).send({message: 'messages'})
