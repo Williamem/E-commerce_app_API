@@ -11,7 +11,8 @@ const CartItem = db.define('cart_items', {
         references: {
             model: User,
             key: 'id',
-        }
+        },
+        primaryKey: true,
     },
     item_id: {
         type: Sequelize.INTEGER,
@@ -19,7 +20,8 @@ const CartItem = db.define('cart_items', {
         references: {
             model: Product,
             key: 'id',
-        }
+        },
+        primaryKey: true,
     },
     quantity: {
         type: Sequelize.INTEGER
