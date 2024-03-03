@@ -14,7 +14,7 @@ const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
 const profileRoutes = require('./routes/profileRoutes');
-//const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 const { isAuthenticated } = require('./middleware/authentication')
 // ... import other routes
 
@@ -32,7 +32,7 @@ app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
 app.use('/products', productRoutes);
 app.use('/profile', profileRoutes);
-// app.use('/cart', cartRoutes);
+app.use('/cart', cartRoutes);
 // ... other routes
 
 app.get('/', (req, res) => {
