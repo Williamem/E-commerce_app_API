@@ -87,20 +87,20 @@ describe("Cart", () => {
             done(err);
           });
       });
-    });
-    it("should update the quantity of an item already in the cart", (done) => {
-      agent
-        .post("/cart/add")
-        .send({ item_id: testProductToAddTo.id, quantity: 2 })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("item_id");
-          res.body.should.have.property("quantity");
-          res.body.should.have.property("user_id");
-          res.body.quantity.should.equal(4);
-          done(err);
-        });
+      it("should update the quantity of an item already in the cart", (done) => {
+        agent
+          .post("/cart/add")
+          .send({ item_id: testProductToAddTo.id, quantity: 2 })
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            res.body.should.have.property("item_id");
+            res.body.should.have.property("quantity");
+            res.body.should.have.property("user_id");
+            res.body.quantity.should.equal(4);
+            done(err);
+          });
+      });
     });
 
     // teardown, log out regular user
