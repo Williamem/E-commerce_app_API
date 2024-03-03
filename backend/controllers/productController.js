@@ -17,7 +17,7 @@ exports.createProduct = async (req, res) => {
         res.status(201).json(product)
     } catch (error) {
         console.error(error);
-        res.status(500).json({message: 'Server error'});
+        res.status(500).json({message: 'Server error in createProduct'});
     }
 };
 
@@ -58,7 +58,7 @@ exports.deleteProduct = async (req, res) => {
         return res.status(200).json({message: 'Product deleted successfully'});
     } catch (error) {
         console.error(error);
-        return res.status(500).json({message: 'Server error'});
+        return res.status(500).json({message: 'Server error in deleteProduct'});
     }
 }
 
@@ -74,7 +74,7 @@ exports.getProduct = async (req, res) => {
         return res.status(200).json(product);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({message: 'Server error'});
+        return res.status(500).json({message: 'Server error in getProduct'});
     }
 }
 
@@ -84,6 +84,6 @@ exports.getProducts = async (req, res) => {
         return res.status(200).json(products);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({message: 'Server error'});
+        return res.status(500).json({message: 'Server error in getProducts'});
     }
 };
