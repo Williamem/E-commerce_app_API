@@ -7,22 +7,29 @@ const server = require("../app");
 chai.should();
 chai.use(chaiHttp);
 
+const findId = async (userToFind) => {
+        const user = await User.findOne({where: {email: userToFind.email}});
+        return user.id;
+}
+
 // keep track of the created addresses
 let createdAddressIds = [];
-const admin = {email: 'admin@example.com', password: 'password', id: 44};
-const adminId = admin.id;
-const regularUser = {email: 'testuser@example.com', password: 'password', id: 32};
-const regularUserId = regularUser.id;
+const admin = {email: 'admin@example.com', password: 'password'};
+let adminId;
+(async () => {
+  adminId = await findId(admin);
+})();
+const testUser = {email: 'user_for_testing@example.com', password: 'password'};
+let testUserId;
+(async () => {
+  testUserId = await findId(testUser);
+})();
 const anotherExistingUserId = 128;
 const nonexistantUserId = 9999;
 
 //
 
-const findId = (user) => {
-    return (req, res, next) => {
-        return req.user.dataValues.id;
-    }
-}
+
 
 
 describe.skip('/profile/:userId/', () => {
@@ -53,10 +60,10 @@ describe.skip('/profile/:userId/', () => {
             };
             it('adds a new address for any user when signed in as admin', (done) => {
                 agent
-                    .post(`/profile/${regularUserId}/address`)
+                    .post(`/profile/${testUserId}/address`)
                     .send(validAddress)
                     .end((err, response) => {
-                        console.log('regularUserId ', regularUserId)
+                        console.log('testUserId ', testUserId)
                         response.should.have.status(201);
                         response.should.be.a('object');
                         response.body.should.have.property("id");
@@ -88,7 +95,7 @@ describe.skip('/profile/:userId/', () => {
         describe('GET /profile/:userId as admin', () => {
             it('gets the addresses and email for any user when signed in as admin', (done) => {
                 agent
-                    .get(`/profile/${regularUserId}`)
+                    .get(`/profile/${testUserId}`)
                     .end((err, response) => {
                         response.should.have.status(200);
                         response.should.be.a('object');
@@ -127,7 +134,7 @@ describe.skip('/profile/:userId/', () => {
                     address: 'Updated Address'
                 };
                 agent
-                    .put(`/profile/${regularUserId}/address/${createdAddressIds[0]}`)
+                    .put(`/profile/${testUserId}/address/${createdAddressIds[0]}`)
                     .send(updatedAddress)
                     .end((err, response) => {
                         response.should.have.status(200);
@@ -185,7 +192,7 @@ describe.skip('/profile/:userId/', () => {
             agent = chai.request.agent(server);
             agent
                 .post('/users/login')
-                .send(regularUser)
+                .send(testUser)
                 .end((err, response) => {
                     done(err);
                 });
@@ -203,10 +210,10 @@ describe.skip('/profile/:userId/', () => {
             };
             it('adds a new address for a user who is signed in', (done) => {
                 agent
-                    .post(`/profile/${regularUserId}/address`)
+                    .post(`/profile/${testUserId}/address`)
                     .send(validAddress)
                     .end((err, response) => {
-                        console.log('regularUserId ', regularUserId)
+                        console.log('testUserId ', testUserId)
                         response.should.have.status(201);
                         response.should.be.a('object');
                         response.body.should.have.property("id");
@@ -236,7 +243,7 @@ describe.skip('/profile/:userId/', () => {
         describe('GET /profile/:userId', () => {
             it('gets the addresses and email for the user who is signed in', (done) => {
                 agent
-                    .get(`/profile/${regularUserId}`)
+                    .get(`/profile/${testUserId}`)
                     .end((err, response) => {
                         response.should.have.status(200);
                         response.should.be.a('object');
@@ -267,7 +274,7 @@ describe.skip('/profile/:userId/', () => {
                     address: 'Updated Address'
                 };
                 agent
-                    .put(`/profile/${regularUserId}/address/${createdAddressIds[0]}`)
+                    .put(`/profile/${testUserId}/address/${createdAddressIds[0]}`)
                     .send(updatedAddress)
                     .end((err, response) => {
                         response.should.have.status(200);

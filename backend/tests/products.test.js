@@ -7,6 +7,7 @@ const Product = require('../models/Product');
 chai.should();
 chai.use(chaiHttp);
 
+const testUser = { email: "user_for_testing@example.com", password: "password" };
 let createdProductIds = [];
 
 describe.skip('/products routes', () => {
@@ -214,7 +215,7 @@ describe.skip('/products routes', () => {
             agent = chai.request.agent(server);
             agent
                 .post('/users/login')
-                .send({email: 'testuser@example.com', password: 'password'})
+                .send(testUser)
                 .end((err, res) => {
                     done(err);
                 });
