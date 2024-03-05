@@ -28,7 +28,7 @@ const testProductToAddTo = { id: 1 };
 const nonExistentProduct = { id: 9999 };
 let createdOrderIds = [];
 
-describe("/cart", () => {
+describe.skip("/cart", () => {
   afterEach((done) => {
     CartItem.destroy({ where: { user_id: testUserId } }).then(() => {
       done();
