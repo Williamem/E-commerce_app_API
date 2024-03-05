@@ -160,7 +160,8 @@ exports.checkout = async (req, res) => {
                 user_id: req.user.id
             }
         });
-        res.status(200).json({ message: "Checkout successful", cartItems });
+        console.log('newOrder',newOrder);
+        res.status(200).json({ message: "Checkout successful", newOrder: newOrder });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
