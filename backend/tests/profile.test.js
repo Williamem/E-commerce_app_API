@@ -1,5 +1,4 @@
-const Address = require('../models/Address');
-const User = require('../models/User')
+const { User, Address } = require('../models/index');
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
@@ -32,7 +31,7 @@ const nonexistantUserId = 9999;
 
 
 
-describe.skip('/profile/:userId/', () => {
+describe('/profile/:userId/', () => {
 
     describe('/profile/:userId/ as admin', () => {
         //setup login admin

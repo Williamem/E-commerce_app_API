@@ -37,6 +37,5 @@ const User = db.define('users', {
   }
 });
 
-User.belongsTo(UserRole, {foreignKey: 'role_id'});
 
 module.exports = User;

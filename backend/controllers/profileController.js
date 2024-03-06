@@ -1,5 +1,4 @@
-const User = require('../models/User');
-const Address = require('../models/Address')
+const { User, Address } = require('../models/index');
 const { addressValidator } = require('../validators/validators')
 
 

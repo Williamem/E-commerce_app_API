@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/index');
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 // keep track of the created user ids
 let createdUserIds = [];
-describe.skip("/users routes", () => {
+describe("/users routes", () => {
     describe("POST /users/register", () => {
         
         afterEach(async () => {

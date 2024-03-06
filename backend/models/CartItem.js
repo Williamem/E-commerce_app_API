@@ -28,8 +28,6 @@ const CartItem = db.define('cart_items', {
     },
 }, {  timestamps: false });
 
-CartItem.belongsTo(User, {foreignKey: 'user_id'});
-CartItem.belongsTo(Product, {foreignKey: 'item_id'});
 
 module.exports = CartItem;
 

@@ -1,8 +1,7 @@
-const User = require('../models/User');
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
-const Product = require('../models/Product');
+const { Product } = require('../models/index');
 
 chai.should();
 chai.use(chaiHttp);
@@ -10,7 +9,7 @@ chai.use(chaiHttp);
 const testUser = { email: "user_for_testing@example.com", password: "password" };
 let createdProductIds = [];
 
-describe.skip('/products routes', () => {
+describe('/products routes', () => {
     describe('/products routes as admin user', () => {
         // Setup
         let agent;
@@ -247,14 +246,14 @@ describe.skip('/products routes', () => {
 
         describe('PUT products/:id as regular user', () => {
 
-            it('doesn\'t allow a reguar user to update a product', (done) => {
+            it('doesn\'t allow a regular user to update a product', (done) => {
                 const updatedProductData = {
                     name: 'Updated test product',
                     price: 120
                     // ... other updated fields
                 };
         
-                const productIdToUpdate = createdProductIds[0]; // Replace with a non-existent product ID
+                const productIdToUpdate = createdProductIds[0];
                 if (!createdProductIds[0]) {
                     return console.log('no product to update')
                 }

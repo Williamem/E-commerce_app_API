@@ -1,4 +1,4 @@
-const Product = require('../models/Product');
+const { Product } = require('../models/index');
 const { productValidator } = require('../validators/validators');
 
 exports.createProduct = async (req, res) => {

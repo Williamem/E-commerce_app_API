@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../controllers/profileController');
-const { isCurrentUser, isAdmin, isCurrentUserOrAdmin } = require('../middleware/authorization');
+const { isCurrentUserOrAdmin } = require('../middleware/authorization');
 
 
 router.get('/:userId', (req, res, next) => isCurrentUserOrAdmin(req.params.userId, req, res, next), profileController.getUserProfile);

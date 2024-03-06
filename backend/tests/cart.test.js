@@ -1,10 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
-const User = require("../models/User");
-const CartItem = require("../models/CartItem");
-const Order = require("../models/Order");
-const OrderItems = require("../models/OrderItems");
+const { User, Order, OrderItems, CartItem } = require("../models/index");
 
 chai.should();
 chai.use(chaiHttp);
@@ -28,7 +25,7 @@ const testProductToAddTo = { id: 1 };
 const nonExistentProduct = { id: 9999 };
 let createdOrderIds = [];
 
-describe.skip("/cart", () => {
+describe("/cart", () => {
   afterEach((done) => {
     CartItem.destroy({ where: { user_id: testUserId } }).then(() => {
       done();

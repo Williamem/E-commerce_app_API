@@ -1,9 +1,5 @@
 // cartController.js
-const CartItem = require("../models/CartItem");
-const Product = require("../models/Product");
-const User = require("../models/User");
-const Order = require("../models/Order");
-const OrderItems = require("../models/OrderItems");
+const { CartItem, Product, Order, OrderItems } = require("../models/index");
 
 exports.getCart = async (req, res) => {
     try {

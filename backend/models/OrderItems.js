@@ -27,7 +27,4 @@ const OrderItems = db.define('orders_items', {
     },
 
 }, { timestamps: false });
-
-OrderItems.belongsTo(Order, { foreignKey: 'order_id' });
-OrderItems.belongsTo(Product, { foreignKey: 'item_id' });
 module.exports = OrderItems;

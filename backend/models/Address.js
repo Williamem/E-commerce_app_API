@@ -42,6 +42,5 @@ const Address = db.define('shipping_addresses', {
     timestamps: false
 });
 
-Address.belongsTo(User, {foreignKey: 'user_id'});
 
 module.exports = Address;

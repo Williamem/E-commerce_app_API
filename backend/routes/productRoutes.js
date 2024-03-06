@@ -5,7 +5,7 @@ const productController = require('../controllers/productController');
 const searchAndFilterController = require('../controllers/searchAndFilterController');
 const passport = require('passport');
 require('../config/passport')(passport);
-const {isAdmin} = require('../middleware/authorization');
+const {isAdmin, isCurrentUser} = require('../middleware/authorization');
 
 //search and filter routes
 router.get('/search/', searchAndFilterController.searchProducts);

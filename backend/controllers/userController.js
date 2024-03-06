@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const UserRole = require('../models/UserRole');
-const Address = require('../models/Address')
+const { User, Address, UserRole } = require('../models/index');
 const { userValidator, addressValidator } = require('../validators/validators')
 
 exports.createUser = async (req, res) => {

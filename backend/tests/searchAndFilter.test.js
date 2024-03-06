@@ -1,4 +1,3 @@
-const Product = require('../models/Product');
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
@@ -6,7 +5,7 @@ const server = require("../app");
 chai.should();
 chai.use(chaiHttp);
 
-describe.skip('Search and Filter', () => {
+describe('Search and Filter', () => {
     describe('GET /products/search', () => {
         it('returns a list of products that match the search query', (done) => {
             chai.request(server)

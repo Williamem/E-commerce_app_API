@@ -39,6 +39,5 @@ const Order = db.define('orders', {
     }
 }, { timestamps: false });
 
-Order.belongsTo(User, { foreignKey: 'user_id' });
 
 module.exports = Order;
