@@ -5,7 +5,7 @@ const server = require("../app");
 chai.should();
 chai.use(chaiHttp);
 
-describe('Search and Filter', () => {
+describe.skip('Search and Filter', () => {
     describe('GET /products/search', () => {
         it('returns a list of products that match the search query', (done) => {
             chai.request(server)

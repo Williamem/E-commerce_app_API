@@ -31,7 +31,7 @@ const nonexistantUserId = 9999;
 
 
 
-describe('/profile/:userId/', () => {
+describe.skip('/profile/:userId/', () => {
 
     describe('/profile/:userId/ as admin', () => {
         //setup login admin

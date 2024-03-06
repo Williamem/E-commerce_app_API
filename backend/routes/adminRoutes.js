@@ -6,8 +6,6 @@ require('../config/passport')(passport);
 
 const {isAdmin} = require('../middleware/authorization');
 
-router.get('/admintest', isAdmin, (req, res) => {
-    res.status(200).send({message: 'only admin can see'})
-});
+//router.get('/users',/*  passport.authenticate('jwt', { session: false }),  */isAdmin, adminController.getAllUsers);
 
 module.exports = router;

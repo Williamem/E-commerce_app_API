@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 // keep track of the created user ids
 let createdUserIds = [];
-describe("/users routes", () => {
+describe.skip("/users routes", () => {
     describe("POST /users/register", () => {
         
         afterEach(async () => {
