@@ -218,7 +218,9 @@ describe.skip("/cart", () => {
         );
       });
       it("should checkout successfully", (done) => {
-        agent.post("/cart/checkout").end(async (err, res) => {
+        agent.post("/cart/checkout")
+        .send({ address_id: 11 })
+        .end(async (err, res) => {
           res.should.have.status(200);
           res.body.message.should.equal("Checkout successful");
 
