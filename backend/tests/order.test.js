@@ -4,7 +4,7 @@ const server = require("../app");
 /* const User = require("../models/User");
 const Order = require("../models/Order");
 const OrderItems = require("../models/OrderItems"); */
-const { User, Order, OrderItems } = require("../models/index_old");
+const { User, Order, OrderItems } = require("../models/index");
 
 chai.should();
 chai.use(chaiHttp);
@@ -14,13 +14,17 @@ const findId = async (userToFind) => {
   return user.id;
 };
 
-const testUser = {
-  email: "user_for_testing@example.com",
-  password: "password",
+const testUser = { email: "user_for_testing@example.com", password: "password",
 };
 let testUserId;
 (async () => {
   testUserId = await findId(testUser);
+})();
+
+const testUser2 = { email: 'user_for_testing2@example.com,', password: "password" };
+let testUser2Id;
+(async () => {
+  testUserId = await findId(testUser2);
 })();
 
 let createdOrderIds = [];
@@ -46,11 +50,11 @@ describe("/orders", () => {
     });
     describe("/orders as signed in user without order history", () => {
       describe("GET /orders", () => {
-        it("it should return an empty array when no orders are placed", (done) => {
+        it("it should return no orders found no orders are placed", (done) => {
           agent.get("/orders").end((err, res) => {
             res.should.have.status(200);
-            res.body.should.be.a("array");
-            res.body.length.should.be.eql(0);
+            res.body.should.be.a("object");
+            res.body.should.have.property("message").eql("No orders found");
             done(err);
           });
         });
@@ -77,12 +81,13 @@ describe("/orders", () => {
       after((done) => {
         if (createdOrderIds.length > 0) {
           const deletePromises = createdOrderIds.map((orderId) => {
-            return OrderItems.destroy({ where: { order_id: orderId } })
-              .then(() => {
+            return OrderItems.destroy({ where: { order_id: orderId } }).then(
+              () => {
                 return Order.destroy({ where: { id: orderId } });
-              });
+              }
+            );
           });
-      
+
           Promise.all(deletePromises)
             .then(() => {
               createdOrderIds = [];
@@ -109,6 +114,7 @@ describe("/orders", () => {
         describe("GET /orders/:id when id is user.id", () => {
           it("it should return an order by id", (done) => {
             agent.get(`/orders/${createdOrderIds[0]}`).end((err, res) => {
+              console.log("createdOrderIds: ", createdOrderIds[0]);
               res.should.have.status(200);
               res.body.should.be.a("object");
               res.body.should.have.property("id").eql(createdOrderIds[0]);
@@ -116,6 +122,38 @@ describe("/orders", () => {
             });
           });
         });
+      });
+    });
+  });
+  describe("/orders as guest", () => {
+    describe("GET /orders", () => {
+      it("it should return unauthorized", (done) => {
+        chai
+          .request(server)
+          .get("/orders")
+          .end((err, res) => {
+            res.should.have.status(401);
+            res.body.should.be.a("object");
+            res.body.should.have
+              .property("message")
+              .eql("Please log in to view your orders");
+            done(err);
+          });
+      });
+    });
+    describe("GET /orders/:id", () => {
+      it("it should return unauthorized", (done) => {
+        chai
+          .request(server)
+          .get("/orders/1")
+          .end((err, res) => {
+            res.should.have.status(401);
+            res.body.should.be.a("object");
+            res.body.should.have
+              .property("message")
+              .eql("Please log in to view your orders");
+            done(err);
+          });
       });
     });
   });
