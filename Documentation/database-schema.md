@@ -34,6 +34,7 @@
 - ship_date (DATE)
 - status (VARCHAR(50) CHECK(status IN ('pending', 'shipped', 'delivered'))
 - tracking_information (TEXT)
+- address_id (Foreign Key, INTEGER)
 
 #### Table: orders_items
 - order_id (Foreign Key, INTEGER)
