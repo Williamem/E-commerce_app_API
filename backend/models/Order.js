@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 const { db } = require('../config/database');
 const User = require('./User');
-const Product = require('./Product');
+const Address = require('./Address');
 
 const Order = db.define('orders', {
     id: {
@@ -36,6 +36,14 @@ const Order = db.define('orders', {
     },
     tracking_information: {
         type: Sequelize.TEXT
+    },
+    address_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: Address,
+            key: 'id',
+        },
     }
 }, { timestamps: false });
 

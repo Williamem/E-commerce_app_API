@@ -11,14 +11,19 @@ const findId = async (userToFind) => {
   return user.id;
 };
 
-const testUser = { email: "user_for_testing@example.com", password: "password",
+const testUser = {
+  email: "user_for_testing@example.com",
+  password: "password",
 };
 let testUserId;
 (async () => {
   testUserId = await findId(testUser);
 })();
 
-const testUser2 = { email: 'user_for_testing2@example.com,', password: "password" };
+const testUser2 = {
+  email: "user_for_testing2@example.com,",
+  password: "password",
+};
 let testUser2Id;
 (async () => {
   testUserId = await findId(testUser2);
@@ -26,7 +31,7 @@ let testUser2Id;
 
 let createdOrderIds = [];
 
-describe.skip("/orders", () => {
+describe("/orders", () => {
   describe("/orders as signed in user", () => {
     // Setup log in regular user
     let agent;
@@ -64,9 +69,10 @@ describe.skip("/orders", () => {
           .post("/cart/add")
           .send({ item_id: 1, quantity: 1 })
           .then((res) => {
-            return agent.post("/cart/checkout");
+            return agent.post("/cart/checkout").send( {address_id: 11 });
           })
           .then((res) => {
+            console.log("res.body: ", res.body);
             createdOrderIds.push(res.body.newOrder.id);
             done();
           })

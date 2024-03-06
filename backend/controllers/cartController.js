@@ -140,8 +140,10 @@ exports.checkout = async (req, res) => {
             const product = await Product.findByPk(cartItems[i].item_id);
             total += product.price * cartItems[i].quantity;
         }
+        console.log('req.params', req.params);
         const newOrder = await Order.create({
             user_id: req.user.dataValues.id,
+            address_id: req.body.address_id,
             order_date: new Date(),
             total_price: total,
             status: "pending"
