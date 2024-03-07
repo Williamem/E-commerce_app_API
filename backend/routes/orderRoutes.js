@@ -4,6 +4,6 @@ const orderController = require('../controllers/orderController');
 const { isAdmin, isCurrentUserOrAdmin, isCurrentUser } = require('../middleware/authorization');
 
 router.get('/', orderController.getOrders);
-router.get('/:id',/*  (req, res, next) => isCurrentUser(req.params.userId, req, res, next), */ orderController.getOrder);
+router.get('/:id', orderController.getOrder);
 
 module.exports = router;

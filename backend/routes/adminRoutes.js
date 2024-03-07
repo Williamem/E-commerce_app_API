@@ -10,5 +10,10 @@ router.get('/users', isAdmin, adminController.getAllUsers);
 router.get('/orders', isAdmin, adminController.getAllOrders);
 router.get('/orders/:id', isAdmin, adminController.getOrderById);
 router.put('/orders/:id', isAdmin, adminController.updateOrderById);
+//handle products
+router.post('/products/add', isAdmin, adminController.createProduct);
+router.get('/products/:id', isAdmin, adminController.getProduct);
+router.put('/products/:id', isAdmin, adminController.updateProduct);
+router.delete('/products/:id', isAdmin, adminController.deleteProduct);
 
 module.exports = router;

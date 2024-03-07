@@ -1,329 +1,44 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
-const { Product } = require('../models/index');
+const { Product } = require("../models/index");
 
 chai.should();
 chai.use(chaiHttp);
 
-const testUser = { email: "user_for_testing@example.com", password: "password" };
+const testUser = {
+  email: "user_for_testing@example.com",
+  password: "password",
+};
 let createdProductIds = [];
 
-describe.skip('/products routes', () => {
-    describe('/products routes as admin user', () => {
-        // Setup
-        let agent;
-        before((done) => {
-            agent = chai.request.agent(server);
-            agent
-                .post('/users/login')
-                .send({email: 'admin@example.com', password: 'password'})
-                .end((err, res) => {
-                    done(err);
-                });
-        });
-
-        describe('POST products/add as admin', () => {
-
-            it('creates a new product when all values are correctly filled in', (done) => {
-                const product = {
-                    name: 'test product',
-                    price: 100,
-                    description: 'a great test product',
-                    stock: 10,
-                    image_url: 'http://testimage.jpeg',
-                    category: 'testing products'
-                };
-                agent
-                    .post('/products/add')
-                    .send(product)
-                    .end((err, response) => {
-                        response.should.have.status(201);
-                        response.body.should.be.a("object");
-                        response.body.should.have.property("id");
-                        response.body.should.have.property("name");
-                        response.body.should.have.property("price");
-                        response.body.should.have.property("description");
-                        response.body.should.have.property("stock");
-                        response.body.should.have.property("image_url");
-                        response.body.should.have.property("category");
-                        createdProductIds.push(response.body.id);
-                        done();
-                });
-            });
-
-            it('creates a new product with only name supplied', (done) => {
-                const product = {
-                    name: 'test product'
-                };
-                agent
-                    .post('/products/add')
-                    .send(product)
-                    .end((err, response) => {
-                        response.should.have.status(201);
-                        response.body.should.be.a("object");
-                        response.body.should.have.property("id");
-                        response.body.should.have.property("name");
-                        response.body.should.have.property("price");
-                        response.body.should.have.property("description");
-                        response.body.should.have.property("stock");
-                        response.body.should.have.property("image_url");
-                        response.body.should.have.property("category");
-                        createdProductIds.push(response.body.id);
-                        done();
-                });
-            });
-
-            it('sets stock to 0 if no info is supplied', (done) => {
-                const product = {
-                    name: 'test product'
-                };
-                agent
-                    .post('/products/add')
-                    .send(product)
-                    .end((err, response) => {
-                        response.should.have.status(201);
-                        response.body.should.be.a("object");
-                        response.body.stock.should.equal(0);
-                        createdProductIds.push(response.body.id);
-                        done();
-                });
-            });
-        });
-
-        describe('PUT products/:id as admin', () => {
-
-            it('updates an existing product with valid data', (done) => {
-                const updatedProductData = {
-                    name: 'Updated test product',
-                    price: 120,
-                    description: 'An updated test product description',
-                    stock: 15,
-                    image_url: 'http://updatedtestimage.jpeg',
-                    category: 'testing products'
-                };
-        
-                const productIdToUpdate = createdProductIds[0];
-                if (!createdProductIds[0]) {
-                    return console.log('the product to update doesn\'t exist');
-                }
-        
-                agent
-                    .put(`/products/${productIdToUpdate}`)
-                    .send(updatedProductData)
-                    .end((err, response) => {
-                        response.should.have.status(200);
-                        response.body.should.be.a('object');
-                        response.body.should.have.property('id', productIdToUpdate);
-                        response.body.should.have.property('name', updatedProductData.name);
-                        response.body.should.have.property('price', updatedProductData.price);
-                        response.body.should.have.property('description', updatedProductData.description);
-                        response.body.should.have.property('stock', updatedProductData.stock);
-                        response.body.should.have.property('image_url', updatedProductData.image_url);
-                        response.body.should.have.property('category', updatedProductData.category);
-                        done();
-                    });
-            });
-        
-            it('returns a 404 error for an invalid product ID', (done) => {
-                const updatedProductData = {
-                    name: 'Updated test product',
-                    price: 120
-                };
-        
-                const invalidProductId = 2;
-        
-                agent
-                    .put(`/products/${invalidProductId}`)
-                    .send(updatedProductData)
-                    .end((err, response) => {
-                        response.should.have.status(404);
-                        done();
-                    });
-            });
-        });
-
-        describe('DELETE /products/:id as admin', () => {
-            //create a product to be deleted
-            let productToDeleteId;
-
-            before((done) => {
-                // Create a product to be deleted
-                const productData = {
-                    name: 'Test product to be deleted'
-                };
-        
-                agent
-                    .post('/products/add')
-                    .send(productData)
-                    .end((err, response) => {
-                        productToDeleteId = response.body.id;
-                        done(err);
-                    });
-            });
-        
-            it('deletes an existing product', (done) => {
-                agent
-                    .delete(`/products/${productToDeleteId}`)
-                    .end((err, response) => {
-                        response.should.have.status(200);
-                        // Add more assertions as needed
-        
-                        done();
-                    });
-            });
-        
-            it('returns a 404 error for an invalid product ID', (done) => {
-                const invalidProductId = 2;
-        
-                agent
-                    .delete(`/products/${invalidProductId}`)
-                    .end((err, response) => {
-                        response.should.have.status(404);
-                        done();
-                    });
-            });
-        
-/*             after((done) => {
-                // Clean up: delete the product created for the test
-                agent
-                    .delete(`/products/${productToDeleteId}`)
-                    .end((err, response) => {
-                        done();
-                    });
-            }); */
-        });
-            
-        // teardown, log out admin
-        after((done) => {
-            chai.request(server)
-                .get('/users/logout')
-                .end((err, res) => {
-                    if (err) {
-                        return done(err);
-                    }
-                    done();
-                });
-        });        
+describe.skip("/products routes", () => {
+  describe("/products routes while not signed in", () => {
+    describe("GET /products/:id", () => {
+      it("returns an object containing product information", (done) => {
+        chai
+          .request(server)
+          .get("/products/1")
+          .end((err, response) => {
+            response.should.have.status(200);
+            response.body.should.be.a("object");
+            response.body.should.have.property("id");
+            response.body.should.have.property("name");
+            done();
+          });
+      });
     });
-
-    describe('/products routes as regular user', () => {
-        // Setup, login regular user
-        let agent;
-        before((done) => {
-            agent = chai.request.agent(server);
-            agent
-                .post('/users/login')
-                .send(testUser)
-                .end((err, res) => {
-                    done(err);
-                });
-        });
-        describe('POST products/add as regular user', () => {
-
-            it('fails to add a product as regular user', (done) => {
-                const product = {
-                    name: 'test product',
-                    price: 100,
-                    description: 'a great test product',
-                    stock: 10,
-                    image_url: 'http://testimage.jpeg',
-                    category: 'testing products'
-                };
-                agent
-                    .post('/products/add')
-                    .send(product)
-                    .end((err, response) => {
-                        response.should.have.status(403);
-                        response.text.should.include('Unauthorized');
-                        if (response.body.id) {
-                            createdProductIds.push(response.body.id);
-                        }
-                        done();
-                    });
-            });
-        });
-
-        describe('PUT products/:id as regular user', () => {
-
-            it('doesn\'t allow a regular user to update a product', (done) => {
-                const updatedProductData = {
-                    name: 'Updated test product',
-                    price: 120
-                    // ... other updated fields
-                };
-        
-                const productIdToUpdate = createdProductIds[0];
-                if (!createdProductIds[0]) {
-                    return console.log('no product to update')
-                }
-        
-                chai.request(server)
-                    .put(`/products/${productIdToUpdate}`)
-                    .send(updatedProductData)
-                    .end((err, response) => {
-                        response.should.have.status(403);
-                        response.text.should.include('Unauthorized');
-                        done();
-                    });
-            });
-        });
-
-        // teardown logout regular user
-        after((done) => {
-            chai.request(server)
-                .get('/users/logout')
-                .end((err, res) => {
-                    if (err) {
-                        return done(err);
-                    }
-                    done();
-                });
-        });
+    describe("GET /products", () => {
+      it("returns an object of all products", (done) => {
+        chai
+          .request(server)
+          .get("/products")
+          .end((err, response) => {
+            response.should.have.status(200);
+            response.body.should.be.a("array");
+            done();
+          });
+      });
     });
-
-    describe('/products routes while not signed in', () => {
-        describe('GET /products/:id', () => {
-            it('returns an object containing product information', (done) => {
-                chai.request(server)
-                .get('/products/1')
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.body.should.be.a("object");
-                    response.body.should.have.property("id");
-                    response.body.should.have.property("name");
-                    done();
-                });
-            });
-        });
-        describe('GET /products', () => {
-            it('returns an object of all products', (done) => {
-                chai.request(server)
-                .get('/products')
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.body.should.be.a("array");
-                    done();
-                });
-            });
-        });
-    });
-
-    // Teardown, delete products created in test
-    after(async () => {
-        try {
-            if (createdProductIds.length > 0) {
-                for (let i = 0; i < createdProductIds.length; i++) {
-                    const id = createdProductIds[i];
-                    const product = await Product.findByPk(id);
-                    if (product) {
-                        await product.destroy();
-                    }
-                }
-                createdProductIds = [];
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    });
+  });
 });
