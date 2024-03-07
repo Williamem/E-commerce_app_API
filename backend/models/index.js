@@ -7,6 +7,7 @@ const User = require("./User");
 const UserRole = require("./UserRole");
 
 Order.belongsTo(User, { foreignKey: "user_id" });
+Order.belongsTo(Address, { foreignKey: 'address_id' });
 Order.hasMany(OrderItems, { foreignKey: "order_id" });
 OrderItems.belongsTo(Order, { foreignKey: "order_id" });
 OrderItems.belongsTo(Product, { foreignKey: "item_id" });
