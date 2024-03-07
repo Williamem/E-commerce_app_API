@@ -6,6 +6,9 @@ require('../config/passport')(passport);
 
 const {isAdmin} = require('../middleware/authorization');
 
-//router.get('/users',/*  passport.authenticate('jwt', { session: false }),  */isAdmin, adminController.getAllUsers);
+router.get('/users', isAdmin, adminController.getAllUsers);
+router.get('/orders', isAdmin, adminController.getAllOrders);
+router.get('/orders/:id', isAdmin, adminController.getOrderById);
+router.put('/orders/:id', isAdmin, adminController.updateOrderById);
 
 module.exports = router;
