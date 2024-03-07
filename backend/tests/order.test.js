@@ -31,7 +31,7 @@ let testUser2Id;
 
 let createdOrderIds = [];
 
-describe.skip("/orders", () => {
+describe("/orders", () => {
   describe("/orders as signed in user", () => {
     // Setup log in regular user
     let agent;

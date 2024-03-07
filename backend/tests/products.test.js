@@ -12,7 +12,7 @@ const testUser = {
 };
 let createdProductIds = [];
 
-describe.skip("/products routes", () => {
+describe("/products routes", () => {
   describe("/products routes while not signed in", () => {
     describe("GET /products/:id", () => {
       it("returns an object containing product information", (done) => {
