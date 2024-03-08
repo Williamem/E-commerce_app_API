@@ -12,7 +12,7 @@ const findId = async (userToFind) => {
 };
 
 const testUser = {
-  email: "testuser@test.com",
+  email: "test_user_order@test.com",
   password: "password",
 };
 let createdOrderIds = [];
