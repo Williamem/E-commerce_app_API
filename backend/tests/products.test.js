@@ -7,18 +7,37 @@ chai.should();
 chai.use(chaiHttp);
 
 const testUser = {
-  email: "user_for_testing@example.com",
+  email: "test_user_product@test.com.com",
   password: "password",
 };
 let createdProductIds = [];
 
+
 describe("/products routes", () => {
   describe("/products routes while not signed in", () => {
     describe("GET /products/:id", () => {
+      //setup create a product
+      before((done) => {
+        Product.create({
+          name: "Test Product",
+          price: 100,
+          description: "Test description",
+          imageUrl: "test.jpg",
+        }).then((product) => {
+          createdProductIds.push(product.id);
+          done();
+        });
+      });
+      //teardown delete the product
+      after((done) => {
+        Product.destroy({ where: { id: createdProductIds } }).then(() => {
+          done();
+        });
+      });
       it("returns an object containing product information", (done) => {
         chai
           .request(server)
-          .get("/products/1")
+          .get(`/products/${createdProductIds[0]}`)
           .end((err, response) => {
             response.should.have.status(200);
             response.body.should.be.a("object");
@@ -29,7 +48,7 @@ describe("/products routes", () => {
       });
     });
     describe("GET /products", () => {
-      it("returns an object of all products", (done) => {
+      it("returns an array with all products", (done) => {
         chai
           .request(server)
           .get("/products")
