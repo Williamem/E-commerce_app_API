@@ -13,25 +13,34 @@ const findId = async (userToFind) => {
 
 // keep track of the created addresses
 let createdAddressIds = [];
-const admin = { email: "admin@example.com", password: "password" };
-let adminId;
+const admin = { email: "admin@test.com", password: "password" };
+/* let adminId;
 (async () => {
   adminId = await findId(admin);
-})();
+})(); */
 const testUser = {
-  email: "user_for_testing@example.com",
+  email: "test_user_profile@test.com",
   password: "password",
 };
-let testUserId;
-(async () => {
-  testUserId = await findId(testUser);
-})();
-const anotherExistingUserId = 128;
-const nonexistantUserId = 9999;
-
-//
-
-describe("/profile/:userId/", () => {
+const validAddress = {
+  first_name: "First",
+  last_name: "Last",
+  phone: "123456789",
+  country: "Country",
+  state: "State",
+  city: "City",
+  address: "Address",
+};
+const updatedAddress = {
+  first_name: "Updated First",
+  last_name: "Updated Last",
+  phone: "987654321",
+  country: "Updated Country",
+  state: "Updated State",
+  city: "Updated City",
+  address: "Updated Address",
+};
+describe("/profile/", () => {
   // teardown, delete any created addresses
   after(async () => {
     try {
@@ -40,44 +49,54 @@ describe("/profile/:userId/", () => {
           const id = createdAddressIds[i];
           const address = await Address.findByPk(id);
           if (address) {
-            await address.destroy(); // delete the user
+            await address.destroy();
           }
         }
-        createdAddressIds = []; // empty the array
+        createdAddressIds = [];
       }
     } catch (err) {
       console.log(err);
     }
   });
-  describe("/profile/:userId/ as regular user", () => {
-    //setup login regular user
+  describe("/profile/ as regular user", () => {
+    //setup create a test user and sign in
     let agent;
     before((done) => {
       agent = chai.request.agent(server);
       agent
-        .post("/users/login")
+        .post("/users/register")
         .send(testUser)
         .end((err, response) => {
-          done(err);
+          if (err) {
+            return done(err);
+          }
+          agent
+            .post("/users/login")
+            .send(testUser)
+            .end((err, response) => {
+              if (err) {
+                return done(err);
+              }
+              done();
+            });
         });
     });
+    //teardown log out
+    after((done) => {
+      agent.get("/users/logout").end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+        done();
+      });
+    });
     //tests
-    describe("POST /profile/:userId/address", () => {
-      const validAddress = {
-        first_name: "First",
-        last_name: "Last",
-        phone: "123456789",
-        country: "Country",
-        state: "State",
-        city: "City",
-        address: "Address",
-      };
+    describe("POST /profile/address", () => {
       it("adds a new address for a user who is signed in", (done) => {
         agent
           .post("/profile/address")
           .send(validAddress)
           .end((err, response) => {
-            console.log("testUserId ", testUserId);
             response.should.have.status(201);
             response.should.be.a("object");
             response.body.should.have.property("id");
@@ -115,15 +134,6 @@ describe("/profile/:userId/", () => {
     });
     describe("PUT /profile/address/:addressId", () => {
       it("updates an address for a user who is signed in", (done) => {
-        const updatedAddress = {
-          first_name: "Updated First",
-          last_name: "Updated Last",
-          phone: "987654321",
-          country: "Updated Country",
-          state: "Updated State",
-          city: "Updated City",
-          address: "Updated Address",
-        };
         agent
           .put(`/profile/address/${createdAddressIds[0]}`)
           .send(updatedAddress)
@@ -142,36 +152,6 @@ describe("/profile/:userId/", () => {
             done();
           });
       });
-    });
-    // teardown
-    //delete any created addresses
-    after(async () => {
-      try {
-        if (createdAddressIds.length > 0) {
-          for (let i = 0; i < createdAddressIds.length; i++) {
-            const id = createdAddressIds[i];
-            const address = await Address.findByPk(id);
-            if (address) {
-              await address.destroy();
-            }
-          }
-          createdAddressIds = []; // empty the array
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    });
-    //log out
-    after((done) => {
-      chai
-        .request(server)
-        .get("/users/logout")
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-          done();
-        });
     });
   });
 });
