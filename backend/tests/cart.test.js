@@ -102,8 +102,6 @@ describe("/cart", () => {
             });
         });
     });
-    //FIXME it still leaves an order in the database but deletes it the next time the test is run?
-    // two afterEach blocks are used
     // delete created cart items
     afterEach((done) => {
       console.log('testUserId in afterEach', testUserId);
