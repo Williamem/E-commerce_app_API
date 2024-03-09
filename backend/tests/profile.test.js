@@ -6,18 +6,8 @@ const server = require("../app");
 chai.should();
 chai.use(chaiHttp);
 
-const findId = async (userToFind) => {
-  const user = await User.findOne({ where: { email: userToFind.email } });
-  return user.id;
-};
-
-// keep track of the created addresses
 let createdAddressIds = [];
-const admin = { email: "admin@test.com", password: "password" };
-/* let adminId;
-(async () => {
-  adminId = await findId(admin);
-})(); */
+let createdUserIds = [];
 const testUser = {
   email: "test_user_profile@test.com",
   password: "password",
@@ -58,6 +48,20 @@ describe("/profile/", () => {
       console.log(err);
     }
   });
+  // teardown, delete any created users
+  after(async () => {
+    try {
+      if (createdUserIds.length > 0) {
+        for (let i = 0; i < createdUserIds.length; i++) {
+          const id = createdUserIds[i];
+          User.destroy({ where: { id } });
+        }
+        createdUserIds = [];
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
   describe("/profile/ as regular user", () => {
     //setup create a test user and sign in
     let agent;
@@ -67,6 +71,7 @@ describe("/profile/", () => {
         .post("/users/register")
         .send(testUser)
         .end((err, response) => {
+          createdUserIds.push(response.body.id);
           if (err) {
             return done(err);
           }
@@ -81,15 +86,16 @@ describe("/profile/", () => {
             });
         });
     });
-    //teardown log out
+    //Teardown log out user
     after((done) => {
-      agent.get("/users/logout").end((err, res) => {
+      agent.get("/users/logout").end((err, response) => {
         if (err) {
           return done(err);
         }
         done();
       });
     });
+
     //tests
     describe("POST /profile/address", () => {
       it("adds a new address for a user who is signed in", (done) => {
