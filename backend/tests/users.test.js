@@ -43,7 +43,6 @@ describe("/users routes", () => {
             response.body.should.be.a("object");
             response.body.should.have.property("id");
             response.body.should.have.property("email");
-            // store the id of the created user
             createdUserIds.push(response.body.id);
             done();
           });
@@ -103,7 +102,6 @@ describe("/users routes", () => {
       it("It should NOT register a new user without password field", (done) => {
         const user = {
           email: "email@example123.com",
-          // exclude email
         };
 
         chai

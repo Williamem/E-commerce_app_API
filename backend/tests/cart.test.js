@@ -12,22 +12,6 @@ const { or } = require("sequelize");
 
 chai.should();
 chai.use(chaiHttp);
-
-//FIXME it still leaves an order in the database but deletes it the next time the test is run
-
-/* const findId = async (userToFind) => {
-  const user = await User.findOne({ where: { email: userToFind.email } });
-  return user.id;
-};
-
-const testUser = {
-  email: "user_for_testing@example.com",
-  password: "password",
-};
-let testUserId;
-(async () => {
-  testUserId = await findId(testUser);
-})(); */
 const testUser = {
   email: "test_user_cart@test.com",
   password: "password",
@@ -47,11 +31,8 @@ let testAddressId;
 const testProduct = { name: "test product", price: 100, stock: 10 };
 let testProductId;
 
-//const testProduct = { id: 7 };
-const testProductToAddTo = { id: 1 };
 const nonExistentProductId = -1;
 let createdOrderIds = [];
-let createdUserIds = [];
 let addedCartItemsIds = [];
 
 describe("/cart", () => {
@@ -293,20 +274,16 @@ describe("/cart", () => {
 
     describe("POST /cart/checkout as regular user", () => {
       before(() => {
-        // Return the promise chain
         return (
           agent
             .post("/cart/add")
             .send({ item_id: testProductId, quantity: 4 })
-            // Use .then to chain the next action
             .then((res) => {
               return agent
                 .post("/cart/add")
                 .send({ item_id: testProductId, quantity: 5 });
             })
-            // Catch any error in the chain
             .catch((err) => {
-              // Optionally throw the error to fail the test
               throw new Error("Setup failed");
             })
         );
