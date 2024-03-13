@@ -3,6 +3,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(50) UNIQUE,
     password VARCHAR(60)
+    createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Create the shipping_addresses table
@@ -17,6 +19,7 @@ CREATE TABLE shipping_addresses (
     city VARCHAR(100),
     address VARCHAR(100)
 );
+
 
 -- Create the items table
 CREATE TABLE items (
@@ -37,8 +40,10 @@ CREATE TABLE orders (
     total_price DECIMAL,
     ship_date DATE,
     status VARCHAR(50) CHECK(status IN ('pending', 'shipped', 'delivered')),
-    tracking_information TEXT
+    tracking_information TEXT,
+    address_id INT REFERENCES shipping_addresses(id)
 );
+
 
 -- Create the orders_items table
 CREATE TABLE orders_items (
@@ -79,16 +84,8 @@ GRANT ALL PRIVILEGES ON TABLE user_roles TO ecommerce_app;
 
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ecommerce_app;
 
--- create admin user
+-- create admin user, this is necessary if you want to test the admin routes in postman, there also isn't a way to create an admin user from the app
 INSERT INTO users (email, password, role_id) 
 VALUES ('admin@example.com', 'password', 
     (SELECT role_id FROM user_roles WHERE role_name = 'admin'));
 
--- add tables for use by sequelize
-ALTER TABLE users
-ADD COLUMN createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW();
-
-ALTER TABLE users
-ADD COLUMN updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW();
-
-ALTER TABLE orders ADD COLUMN address_id INT REFERENCES shipping_addresses(id);
